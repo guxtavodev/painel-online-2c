@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Anúncios</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+<style>
+  #tasks {
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <h1 class="title">Painel de Anúncios 📌</h1>
+      <div id="notices"></div>
+        <div id="tasks"></div>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+
+// Array de avisos
+    let notices = [
+        "Lembrete: Prova de Matemática adiada para 02/05/2024.",
+        "Aula de História cancelada nesta sexta-feira."
+    ];
+
+    // Função para exibir os avisos
+    function displayNotices() {
+        let noticesContainer = document.getElementById('notices');
+        noticesContainer.innerHTML = '';
+
+        notices.forEach(notice => {
+            let noticeElement = document.createElement('article');
+            noticeElement.classList.add('message', 'is-info');
+            noticeElement.innerHTML = `
+                <div class="message-body">
+                    ${notice}
+                </div>
+            `;
+            noticesContainer.appendChild(noticeElement);
+        });
+    }
+  
+    // Array de tarefas
+    let tasks = [
+        { name: "Trabalho de Matemática", deadline: "30/04/2024", description: "Resolver exercícios dos capítulos 1 e 2", completed: false },
+        { name: "Redação sobre Machado de Assis", deadline: "25/04/2024", description: "Escrever um texto de no mínimo 1 página sobre a obra de Machado de Assis", completed: true },
+        { name: "Estudar para prova de História", deadline: "28/04/2024", description: "Revisar os principais eventos da Segunda Guerra Mundial", completed: false }
+    ];
+
+    // Função para exibir as tarefas
+    function displayTasks() {
+        let tasksContainer = document.getElementById('tasks');
+        tasksContainer.innerHTML = '';
+
+        tasks.forEach((task, index) => {
+            let taskElement = document.createElement('div');
+            taskElement.classList.add('box');
+            if (task.completed) {
+                taskElement.classList.add('has-background-grey-lighter');
+            }
+            taskElement.innerHTML = `
+                <label class="checkbox">
+                    <input type="checkbox" onchange="toggleTask(${index})" ${task.completed ? 'checked' : ''}>
+                    <span>${task.name}</span>
+                </label>
+                <p><strong>Prazo:</strong> ${task.deadline}</p>
+                <p><strong>Descrição:</strong> ${task.description}</p>
+            `;
+            taskElement.addEventListener('click', () => showTaskDetails(task));
+            tasksContainer.appendChild(taskElement);
+        });
+    }
+
+    // Função para exibir detalhes da tarefa em um pop-up
+    function showTaskDetails(task) {
+        Swal.fire({
+            title: task.name,
+            html: `
+                <p><strong>Prazo:</strong> ${task.deadline}</p>
+                <p><strong>Descrição:</strong> ${task.description}</p>
+                <p><strong>Status:</strong> ${task.completed ? 'Concluído ✅' : 'Pendente ❌'}</p>
+            `,
+            showCloseButton: true
+        });
+    }
+
+    // Função para marcar uma tarefa como concluída ou não
+    function toggleTask(index) {
+        tasks[index].completed = !tasks[index].completed;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        displayTasks();
+    }
+
+    // Verifica se há tarefas no armazenamento local
+    let storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+        tasks = JSON.parse(storedTasks);
+    }
+displayNotices();
+    // Exibe as tarefas
+    displayTasks();
+</script>
+</body>
+</html>

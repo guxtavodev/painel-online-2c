@@ -92,8 +92,13 @@ function showTaskDetails(task) {
 // Função para marcar uma tarefa como concluída ou não
 function toggleTask(index) {
     tasks[index].completed = !tasks[index].completed;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    saveTasksToLocalStorage(); // Salva as tarefas no localStorage
     displayTasks();
+}
+
+// Função para salvar as tarefas no localStorage
+function saveTasksToLocalStorage() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 // Verifica se há tarefas no armazenamento local

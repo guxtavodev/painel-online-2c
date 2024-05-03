@@ -24,86 +24,88 @@
 <script>
 
 // Array de avisos
-    let notices = [
-        "Lembrete: Amanhã, dia 4 de Maio, terá sábado letivo"
-    ];
+let notices = [
+    "Lembrete: Amanhã, dia 4 de Maio, terá sábado letivo"
+];
 
-    // Função para exibir os avisos
-    function displayNotices() {
-        let noticesContainer = document.getElementById('notices');
-        noticesContainer.innerHTML = '';
+// Array de tarefas
+let tasks = [
+    { name: "Mapa Mental de Val", deadline: "02/05/2024", description: "Entregar os mapas mentais desenvolvidos em dupla ou individual sobre os tópicos do livro que o professor disponiibizou no grupo", completed: false },
+    { name: "Seminário de Adelson", deadline: "Data do seu grupo", description: "Apresentar com seu respectivo grupo, o seu tema, em suas datas, a nota é individual, cada participante deverá falar por 5 minutos. E também deverá entregar o trabalho escrito com as normas ABNT", completed: true },
+    { name: "Avaliação de Educação Física", deadline: "09/05/2024", description: "Avaliação com os assuntos: Fundamentos do basquetebol, regras, história, conceito de esporte e função social."}
+];
 
-        notices.forEach(notice => {
-            let noticeElement = document.createElement('article');
-            noticeElement.classList.add('message', 'is-info');
-            noticeElement.innerHTML = `
-                <div class="message-body">
-                    ${notice}
-                </div>
-            `;
-            noticesContainer.appendChild(noticeElement);
-        });
-    }
-  
-    // Array de tarefas
-    let tasks = [
-        { name: "Mapa Mental de Val", deadline: "02/05/2024", description: "Entregar os mapas mentais desenvolvidos em dupla ou individual sobre os tópicos do livro que o professor disponiibizou no grupo", completed: false },
-        { name: "Seminário de Adelson", deadline: "Data do seu grupo", description: "Apresentar com seu respectivo grupo, o seu tema, em suas datas, a nota é individual, cada participante deverá falar por 5 minutos. E também deverá entregar o trabalho escrito com as normas ABNT", completed: true },
-      { name: "Avaliação de Educação Física", deadline: "09/05/2024", description: "Avaliação com os assuntos: Fundamentos do basquetebol, regras, história, conceito de esporte e função social."}
-    ];
+// Função para exibir os avisos
+function displayNotices() {
+    let noticesContainer = document.getElementById('notices');
+    noticesContainer.innerHTML = '';
 
-    // Função para exibir as tarefas
-    function displayTasks() {
-        let tasksContainer = document.getElementById('tasks');
-        tasksContainer.innerHTML = '';
+    notices.forEach(notice => {
+        let noticeElement = document.createElement('article');
+        noticeElement.classList.add('message', 'is-info');
+        noticeElement.innerHTML = `
+            <div class="message-body">
+                ${notice}
+            </div>
+        `;
+        noticesContainer.appendChild(noticeElement);
+    });
+}
 
-        tasks.forEach((task, index) => {
-            let taskElement = document.createElement('div');
-            taskElement.classList.add('box');
-            if (task.completed) {
-                taskElement.classList.add('has-background-grey-lighter');
-            }
-            taskElement.innerHTML = `
-                <label class="checkbox">
-                    <input type="checkbox" onchange="toggleTask(${index})" ${task.completed ? 'checked' : ''}>
-                    <span>${task.name}</span>
-                </label>
-                <p><strong>Prazo:</strong> ${task.deadline}</p>
-                <p><strong>Descrição:</strong> ${task.description}</p>
-            `;
-            taskElement.addEventListener('click', () => showTaskDetails(task));
-            tasksContainer.appendChild(taskElement);
-        });
-    }
+// Função para exibir as tarefas
+function displayTasks() {
+    let tasksContainer = document.getElementById('tasks');
+    tasksContainer.innerHTML = '';
 
-    // Função para exibir detalhes da tarefa em um pop-up
-    function showTaskDetails(task) {
-        Swal.fire({
-            title: task.name,
-            html: `
-                <p><strong>Prazo:</strong> ${task.deadline}</p>
-                <p><strong>Descrição:</strong> ${task.description}</p>
-                <p><strong>Status:</strong> ${task.completed ? 'Concluído ✅' : 'Pendente ❌'}</p>
-            `,
-            showCloseButton: true
-        });
-    }
+    tasks.forEach((task, index) => {
+        let taskElement = document.createElement('div');
+        taskElement.classList.add('box');
+        if (task.completed) {
+            taskElement.classList.add('has-background-grey-lighter');
+        }
+        taskElement.innerHTML = `
+            <label class="checkbox">
+                <input type="checkbox" onchange="toggleTask(${index})" ${task.completed ? 'checked' : ''}>
+                <span>${task.name}</span>
+            </label>
+            <p><strong>Prazo:</strong> ${task.deadline}</p>
+            <p><strong>Descrição:</strong> ${task.description}</p>
+        `;
+        taskElement.addEventListener('click', () => showTaskDetails(task));
+        tasksContainer.appendChild(taskElement);
+    });
+}
 
-    // Função para marcar uma tarefa como concluída ou não
-    function toggleTask(index) {
-        tasks[index].completed = !tasks[index].completed;
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        displayTasks();
-    }
+// Função para exibir detalhes da tarefa em um pop-up
+function showTaskDetails(task) {
+    Swal.fire({
+        title: task.name,
+        html: `
+            <p><strong>Prazo:</strong> ${task.deadline}</p>
+            <p><strong>Descrição:</strong> ${task.description}</p>
+            <p><strong>Status:</strong> ${task.completed ? 'Concluído ✅' : 'Pendente ❌'}</p>
+        `,
+        showCloseButton: true
+    });
+}
 
-    // Verifica se há tarefas no armazenamento local
-    let storedTasks = localStorage.getItem('tasks');
-    if (storedTasks) {
-        tasks = JSON.parse(storedTasks);
-    }
-displayNotices();
-    // Exibe as tarefas
+// Função para marcar uma tarefa como concluída ou não
+function toggleTask(index) {
+    tasks[index].completed = !tasks[index].completed;
+    localStorage.setItem('tasks', JSON.stringify(tasks));
     displayTasks();
+}
+
+// Verifica se há tarefas no armazenamento local
+let storedTasks = localStorage.getItem('tasks');
+if (storedTasks) {
+    tasks = JSON.parse(storedTasks);
+}
+
+// Exibe os avisos e as tarefas
+displayNotices();
+displayTasks();
+
 </script>
 </body>
 </html>
